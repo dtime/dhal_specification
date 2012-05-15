@@ -8,7 +8,7 @@ layout: default
 
 * __Author:__ Mike Kelly ([mike@stateless.co][1])
 * __Dhal Edits:__ David Haslem ([david@dtime.com][1])
-* __Dates:__ 2012-05-15 (Created) 2012-05-15 (Updated)
+* __Dates:__ 2012-05-15 (Forked) 2012-05-15 (Last Updated)
 * __Status:__ Draft
 
 ### Discussion Group
@@ -23,6 +23,14 @@ available here: <http://stateless.co/hal_specification.html>
 
 As it is intended to be a superset, most of this document will describe HAL.
 DHAL-specific sections will be marked with an asterisk (\*), and are listed here for
+quick reference:
+
+* the `_template` attribute is now part of the formal definition
+* A link may have the `href-template` instead of `href` attribute set. If it is
+  set, it will be a URI template and should conform with the rules in rfc 6570:
+  <http://tools.ietf.org/html/rfc6570>. To conform with the current draft of
+  HAL, the href-template may also be stored in the href - if both are present,
+  the href-template is to be preferred.
 
 ## General Description
 
