@@ -1,43 +1,54 @@
 ---
 layout: default
 ---
-# HAL - Hypertext Application Language
+# DHAL - Data-template Hypertext Application Language
 
-## A lean hypermedia type
+## A lean hypermedia type based on HAL with extensions for dtime.com
+
 
 * __Author:__ Mike Kelly ([mike@stateless.co][1])
-* __Dates:__ 2011-06-13 (Created) 2012-04-06 (Updated)
+* __Dhal Edits:__ David Haslem ([david@dtime.com][1])
+* __Dates:__ 2012-05-15 (Created) 2012-05-15 (Updated)
 * __Status:__ Draft
 
 ### Discussion Group
 
-If you have any questions or feedback about HAL, you can message the [HAL-discuss mailing list][2]. 
+This is an extension of the HAL media type. The hal mailing list is available here:
+[HAL-discuss mailing list][2].
+
+## Notes
+
+DHAL is a superset of HAL. This document is a fork of the original HAL specification
+available here: <http://stateless.co/hal_specification.html>
+
+As it is intended to be a superset, most of this document will describe HAL.
+DHAL-specific sections will be marked with an asterisk (\*), and are listed here for
 
 ## General Description
 
 HAL is a simple way of linking with JSON or XML.
 
-It provides a set of conventions for expressing hyperlinks to, and embeddedness of, related resources - the rest of a HAL document is just plain old JSON or XML. 
+It provides a set of conventions for expressing hyperlinks to, and embeddedness of, related resources - the rest of a HAL document is just plain old JSON or XML.
 
-HAL is a bit like HTML for machines, in that it is designed to drive many different types of application. The difference is that HTML is intended for presenting a graphical hypertext interface to a 'human actor', whereas HAL is intended for presenting a machine hypertext interface to 'automated actors'. 
+HAL is a bit like HTML for machines, in that it is designed to drive many different types of application. The difference is that HTML is intended for presenting a graphical hypertext interface to a 'human actor', whereas HAL is intended for presenting a machine hypertext interface to 'automated actors'.
 
-This document contains a formalised specification of HAL. For a friendlier, more pracitcal introduction to HAL you can read this article: [JSON Linking with HAL][3] 
+This document contains a formalised specification of HAL. For a friendlier, more pracitcal introduction to HAL you can read this article: [JSON Linking with HAL][3]
 
 HAL has two main components: Resources and Links.
 * Resources can have their own state, links, and other embedded resources.
 * Links have a link relation (rel) that signals how to interpret the target resource.
 
-Below is an image illustrating HAL's information model: 
+Below is an image illustrating HAL's information model:
 
 ![The HAL Information model][4]
 
-HAL is two media types (application/hal+json & application/hal+xml) with which applications are meant to be developed and exposed as sets of traversable link relations. 
+HAL is two media types (application/hal+json & application/hal+xml) with which applications are meant to be developed and exposed as sets of traversable link relations.
 
 Instead of using linkless JSON/XML, or spending time developing a custom
 media type, you can just use HAL and focus on creating link relations to
 drive your application.
 
-HAL encourages the use of link relations to: 
+HAL encourages the use of link relations to:
 
 *   Identify links and embedded resources within the representation
 *   Infer the expected structure and meaning of target resources
@@ -173,9 +184,9 @@ Here is the same example using the XML variant of HAL:
 
 ## Compliance
 
-An implementation is not compliant if it fails to satisfy one or more of the MUST or REQUIRED level requirements. An implementation that satisfies all the MUST or REQUIRED level and all the SHOULD level requirements is said to be "unconditionally compliant"; one that satisfies all the MUST level requirements but not all the SHOULD level requirements is said to be "conditionally compliant." 
+An implementation is not compliant if it fails to satisfy one or more of the MUST or REQUIRED level requirements. An implementation that satisfies all the MUST or REQUIRED level and all the SHOULD level requirements is said to be "unconditionally compliant"; one that satisfies all the MUST level requirements but not all the SHOULD level requirements is said to be "conditionally compliant."
 
-> The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119][5]. 
+> The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119][5].
 
 ## Media Type Identifiers
 *   __application/hal+json__
@@ -191,7 +202,7 @@ An implementation is not compliant if it fails to satisfy one or more of the MUS
 HAL provides hypertext capabilities via two elements:
 
 1.  Resources
-    
+
     For expressing the embedded nature of a given part of the representation.
 
 2.  Links
@@ -203,41 +214,41 @@ HAL provides hypertext capabilities via two elements:
 The **Resource** and **Link** elements share the following attributes:
 
 *   __href__
-    
+
     REQUIRED
-    
+
     For indicating the target URI.
-    
+
     **href** corresponds with the '[Target IRI][6]' as defined in [Web Linking (RFC 5988)][7]
 
 *   __rel__
-    
+
     REQUIRED
-    
+
     For identifying how the target URI relates to the 'Subject **Resource**'. The Subject **Resource** is the closest parent **Resource** element.
-    
+
     This attribute is not a requirement for the root element of a HAL representation, as it has an implicit default value of 'self'
-    
+
     **rel** corresponds with the '[relation parameter][8]' as defined in [Web Linking (RFC 5988)][7]
-    
+
     **rel** attribute SHOULD be used for identifying **Resource** and **Link** elements in a HAL representation.
 
 *   __name__
-    
+
     OPTIONAL
-    
+
     For distinguishing between **Resource** and **Link** elements that share the same **rel** value. The **name** attribute SHOULD NOT be used exclusively for identifying elements within a HAL representation, it is intended only as a 'secondary key' to a given **rel** value.
 
 Note: the following attributes have corresponding [target attributes][9]' as defined in [Web Linking (RFC 5988)][7]
 
 *   __hreflang__
-  
+
     OPTIONAL
 
     For indicating what the language of the result of dereferencing the link should be.
 
 *   __title__
-   
+
     OPTIONAL
 
     For labeling the destination of a link with a human-readable identifier.
@@ -257,9 +268,9 @@ The following are attribute definitions applicable only to HAL's **Link** elemen
 The following are attribute definitions applicable only to HAL's **Resource** element.
 
 *    __href__
-    
+
      REQUIRED
-    
+
      Content embedded within a **Resource** element MAY be a full, partial, summary, or incorrect representation of the content available at the target URI. Applications which use HAL MAY clarify the integrity of specific embedded content via the description of the relevant **rel** value.
 
 ## Constraints
