@@ -1,13 +1,13 @@
-# DHAL - Data-template Hypertext Application Language
+# DHAL - Dtime Hypertext Application Language
 
 ## A lean hypermedia type
 
-HAL is a simple way of linking with JSON or XML.
+HAL is a simple way of linking with JSON.
 
-It provides a set of conventions for expressing hyperlinks to, and embeddedness of, related resources - the rest of a HAL document is just plain old JSON or XML.
+It provides a set of conventions for expressing hyperlinks to, and embeddedness of, related resources - the rest of a HAL document is just plain old JSON .
 DHAL is a superset of hal adding support for data-templates.
 
-This repo contains a formalised specification of DHAL (see [dhal\_specification.md][1]).
+This repo contains a formalised specification of DHAL (see [dhal\_specification.mkd][1]).
 
 For a friendlier, more pracitcal introduction to HAL you can read this article: [JSON Linking with HAL][2].
 
@@ -29,7 +29,7 @@ and raise a pull request with your changes.
 
 
 
- [1]: https://github.com/dtime/dhal_specification/blob/master/dhal_specification.md
+ [1]: https://github.com/dtime/dhal_specification/blob/master/dhal_specification.mkd
  [2]: http://blog.stateless.co/post/13296666138/json-linking-with-hal
  [3]: http://groups.google.com/group/hal-discuss
  [4]: https://github.com/zircote/Hal

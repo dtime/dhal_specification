@@ -1,42 +1,48 @@
 ---
 layout: default
 ---
-# DHAL - Data-template Hypertext Application Language
+# DHAL - Dtime Hypertext Application Language
 
-## A lean hypermedia type based on HAL with extensions for dtime.com
+## A lean hypermedia type based on HAL with extensions for dtime
 
 
 * __Author:__ Mike Kelly ([mike@stateless.co][1])
-* __Dhal Edits:__ David Haslem ([david@dtime.com][1])
+* __Dhal Edits:__ David Haslem ([david@dtime.com][17])
 * __Dates:__ 2012-05-15 (Forked) 2012-05-15 (Last Updated)
 * __Status:__ Draft
 
 ### Discussion Group
 
-This is an extension of the HAL media type. The hal mailing list is available here:
+DHAL is a superset of the HAL media type. The hal mailing list is available here:
 [HAL-discuss mailing list][2].
 
-## Notes
+## DHAL Differences
 
 DHAL is a superset of HAL. This document is a fork of the original HAL specification
 available here: <http://stateless.co/hal_specification.html>
+
+DHAL is currently only defined with a JSON variant.
 
 As it is intended to be a superset, most of this document will describe HAL.
 DHAL-specific sections will be marked with an asterisk (\*), and are listed here for
 quick reference:
 
+* DHAL is json only.
 * the `_template` attribute is now part of the formal definition
 * A link may have the `href-template` instead of `href` attribute set. If it is
   set, it will be a URI template and should conform with the rules in rfc 6570:
   <http://tools.ietf.org/html/rfc6570>. To conform with the current draft of
   HAL, the href-template may also be stored in the href - if both are present,
-  the href-template is to be preferred.
+  the href-template is preferred.
+* A link may have the `href-vars` set if a uri template is available. It is optional,
+  as uri templates can be parsed to discover this information, but additional
+  metadata relating to the field may be supplied in this field.
 
 ## General Description
 
-HAL is a simple way of linking with JSON or XML.
+HAL is a simple way of linking with JSON.
 
-It provides a set of conventions for expressing hyperlinks to, and embeddedness of, related resources - the rest of a HAL document is just plain old JSON or XML.
+It provides a set of conventions for expressing hyperlinks to, and embeddedness of, related resources - the rest of a HAL document is just plain old JSON.
 
 HAL is a bit like HTML for machines, in that it is designed to drive many different types of application. The difference is that HTML is intended for presenting a graphical hypertext interface to a 'human actor', whereas HAL is intended for presenting a machine hypertext interface to 'automated actors'.
 
@@ -50,9 +56,9 @@ Below is an image illustrating HAL's information model:
 
 ![The HAL Information model][4]
 
-HAL is two media types (application/hal+json & application/hal+xml) with which applications are meant to be developed and exposed as sets of traversable link relations.
+DHAL is a single media type (application/vnd.dtime.dhal+json) with which applications are meant to be developed and exposed as sets of traversable link relations.
 
-Instead of using linkless JSON/XML, or spending time developing a custom
+Instead of using linkless JSON, or spending time developing a custom
 media type, you can just use HAL and focus on creating link relations to
 drive your application.
 
@@ -71,7 +77,20 @@ Here is how you could represent a collection of orders with the JSON variant of 
   "_links": {
     "self": { "href": "/orders" },
     "next": { "href": "/orders?page=2" },
-    "search": { "href": "/orders?id={order_id}" }
+    "search": {
+      "href-template": "/orders?id={order_id}",
+      "href-vars": {
+        "order_id": { "title": "Order Id",  "href": "/params/order_id" }
+      }
+    }
+  },
+  "_template": {
+      "type" => "order",
+      "properties" => {
+        "total" => {"type" => "float", "required" => true},
+        "currency" => {"type" => "string", "required" => true}
+      }
+    }
   },
   "_embedded": {
     "order": [
@@ -135,54 +154,11 @@ Here is how you could represent a collection of orders with the JSON variant of 
 }
 {% endhighlight %}
 
-Here is the same example using the XML variant of HAL:
-
-{% highlight xml %}
-<resource href="/orders">
-  <link rel="next" href="/orders?page=2" />
-  <link rel="search" href="/orders?id={order_id}" />
-  <resource rel="order" href="/orders/123">
-    <link rel="customer" href="/customer/bob" title="Bob Jones <bob@jones.com>" />
-    <resource rel="basket" href="/orders/123/basket">
-      <item>
-        <sku>ABC123</sku>
-        <quantity>2</quantity>
-        <price>9.50</price>
-      </item>
-      <item>
-        <sku>GFZ111</sku>
-        <quantity>1</quantity>
-        <price>11.00</price>
-      </item>
-    </resource>
-    <total>30.00</total>
-    <currency>USD</currency>
-    <status>shipped</status>
-    <placed>2011-01-16</placed>
-  </resource>
-  <resource rel="order" href="/orders/124">
-    <link rel="customer" href="/customer/jen" title="Jen Harris <jen@internet.com>" />
-    <resource rel="basket" href="/orders/124/basket">
-      <item>
-        <sku>KLM222</sku>
-        <quantity>1</quantity>
-        <price>9.00</price>
-      </item>
-      <item>
-        <sku>HHI50</sku>
-        <quantity>1</quantity>
-        <price>11.00</price>
-      </item>
-    </resource>
-    <total>20.00</total>
-    <currency>USD</currency>
-    <status>processing</status>
-    <placed>2011-01-16</placed>
-  </resource>
-</resource>
-{% endhighlight %}
 
 ## Code
+
+For HAL parsing:
+
 * [(Ruby) JSON::HAL][16]
 * [(PHP) Hal Library][12]
 * [(PHP) Nocarrier\Hal][15]
@@ -196,18 +172,14 @@ An implementation is not compliant if it fails to satisfy one or more of the MUS
 
 > The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119][5].
 
-## Media Type Identifiers
-*   __application/hal+json__
+## Media Type Identifiers\*
+*   __application/vnd.dtime.dhal+json__
 
-    The JSON based variant of HAL
+    The JSON based variant of DHAL
 
-*   __application/hal+xml__
+## Components\*
 
-    The XML based variant of HAL
-
-## Components
-
-HAL provides hypertext capabilities via two elements:
+HAL provides hypertext capabilities via three elements:
 
 1.  Resources
 
@@ -216,6 +188,10 @@ HAL provides hypertext capabilities via two elements:
 2.  Links
 
     For expressing 'outbound' hyperlinks to other, related resources.
+
+3.  Templates\*
+
+    For expressing how to build new resources
 
 ### Shared Attributes
 
@@ -281,19 +257,24 @@ The following are attribute definitions applicable only to HAL's **Resource** el
 
      Content embedded within a **Resource** element MAY be a full, partial, summary, or incorrect representation of the content available at the target URI. Applications which use HAL MAY clarify the integrity of specific embedded content via the description of the relevant **rel** value.
 
+### Templates\*
+
+Templates should conform with JSON-schema <http://tools.ietf.org/html/draft-zyp-json-schema-03>.
+
 ## Constraints
 
 The root of a HAL representation MUST be a **Resource** with an href that corresponds to the effective request URI of the resource being represented.
 
-## HAL in JSON (application/hal+json)
+## DHAL in JSON (application/vnd.dtime.dhal+json)\*
 
 Note: click the following for a [more accessible explanation of HAL in JSON][3]
 
 Further details on the JSON variant of HAL:
 
 *   **Resources** are represented as objects
-*   **Resource** objects have two reserved properties: \_links and \_embedded
+*   **Resource** objects have two reserved properties: \_links, \_template and \_embedded
 *   The \_links property contains **Link** objects against keys that match their relation
+*   The \_template property contains a json schema template
 *   The \_embedded property contains embedded **Resource** objects against keys that match their relation
 *   **Resource** objects MUST have a self link (\_link.self) which indicates the URI of the embedded resource
 *   Relations with one corresponding **Resource**/**Link** have a single object value, relations with multiple corresponding HAL elements have an array of objects as their value.
@@ -305,18 +286,11 @@ Further details on the JSON variant of HAL:
 { "_links": { "self": { "href": "http://example.com/" } } }
 {% endhighlight %}
 
-### XML
-{% highlight xml %}
-<resource href="http://example.com/" />
-{% endhighlight %}
-
 ## Recommendations
 
 ### Using URIs for Link relation values
 
 Link relation values used in HAL representations SHOULD be URIs which, when dereferenced, provide relevant details. This helps to improve the discoverability of your application.
-
-For XML, the [CURIE syntax][10] MAY be used for brevity.
 
 For JSON, a 'curie' link can be used like so:
 
@@ -348,3 +322,4 @@ Transclusion ala esi for JSON variant? XML can reuse ESI?
  [14]: https://bitbucket.org/smichelotti/hal-media-type
  [15]: https://github.com/blongden/hal
  [16]: https://github.com/apotonick/roar/blob/master/lib/roar/representer/json/hal.rb
+ [17]: mailto:david%40dtime.com
